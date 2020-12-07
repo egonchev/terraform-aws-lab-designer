@@ -14,8 +14,8 @@ data "aws_availability_zones" "azs" {
 resource "aws_iam_server_certificate" "cert" {
   provider         = aws.provider
   name             = "example_cert"
-  certificate_body = file("certificates/example.crt")
-  private_key      = file("certificates/example.key")
+  certificate_body = file(var.tls-certificate.crt)
+  private_key      = file(var.tls-certificate.key)
 }
 
 module "vpc" {
@@ -116,7 +116,10 @@ module "alb" {
 }
 
 resource "aws_alb_target_group_attachment" "svc_physical_external" {
-  for_each         =  {for pair in setproduct(sort(flatten(setunion(values(var.network_services["web_access"].targets)))) , keys(var.network_services["web_access"].targets)): "${pair[0]}:${pair[1]}"=>pair if contains(var.network_services["web_access"].targets[pair[1]], pair[0])}
+  for_each         =  { for pair in setproduct(sort(flatten(setunion(values(var.network_services["web_access"].targets)))), 
+                        keys(var.network_services["web_access"].targets)): "${pair[0]}:${pair[1]}"=>pair 
+                        if contains(var.network_services["web_access"].targets[pair[1]], pair[0])
+                      }
   provider         = aws.provider
   target_group_arn = module.alb.target_group_arns[index(sort(flatten(setunion(values(var.network_services["web_access"].targets)))), each.value[0])]
   target_id        = aws_instance.ec2_instances[each.value[1]].id

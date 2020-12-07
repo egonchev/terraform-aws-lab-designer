@@ -34,7 +34,8 @@ resource "aws_instance" "ec2_instances" {
     split("/",var.vpc_network.public_subnets[0])[1]))
   ]
 
-  private_ip                  = contains(concat(var.vpc_network.public_subnets, var.vpc_network.private_subnets),lookup(each.value, "private_ip")) ? "" : lookup(each.value, "private_ip","") 
+  private_ip                  = contains(concat(var.vpc_network.public_subnets, var.vpc_network.private_subnets),lookup(each.value, "private_ip")) ? "" : 
+                                lookup(each.value, "private_ip","") 
   associate_public_ip_address = lookup(each.value, "associate_public_ip_address", "false")
 
   tags = {

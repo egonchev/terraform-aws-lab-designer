@@ -16,7 +16,16 @@ variable aws_account {
 variable ssh-key {
   description = "SSH Key"
   type        = string
-  default = "./keys/ssh_key.pub"
+  default = "./resources/keys/ssh_key.pub"
+}
+
+variable tls-certificate {
+  description = "TLS certificate for Application load balancer"
+  type        = map(string)
+  default = {
+    crt = "./resources/certificates/example.crt"
+    key = "./resources/certificates/example.key"
+  }
 }
 
 variable vpc_network {
@@ -72,14 +81,12 @@ variable "network_services" {
   type        = any
   default = {
     ssh-external-access = {
-      type      = "login",
       from      = ["0.0.0.0/0"],
       targets   = {
         "bastion": ["22/tcp"]
       },
     },
     ssh-internal-hosts = {
-      type         = "login",
       from         = ["10.0.1.10/32"],
       targets      = {
         "wordpress": ["22/tcp"],
@@ -88,14 +95,12 @@ variable "network_services" {
       }
     },
     db = {
-      type         = "db_access",
       from         = ["10.0.21.11/32"],
       targets      = {
         "db":        ["3306/tcp", "33060/tcp"]
       },
     }, 
     docker = {
-      type         = "docker",
       from         = ["self"],
       targets      = {
         "swarm-manager": ["4789/udp", "7946/tcp", "2377/tcp", "2375/tcp"],
@@ -104,7 +109,6 @@ variable "network_services" {
       }
     },     
     web_access = {
-      type         = "web_access",
       from         = ["self", "0.0.0.0/0"],
       targets      = {
         "wordpress":     ["443/tcp"],

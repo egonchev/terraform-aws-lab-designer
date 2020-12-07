@@ -12,6 +12,8 @@ output "ec2_instances" {
 output "load_balancer_url" {
   value = {
   "Load balancer DNS": module.alb.this_lb_dns_name,
-  "Service urls": [ for port in sort(flatten(setunion(values(var.network_services["web_access"].targets)))): format("https://${module.alb.this_lb_dns_name}:%s",split("/",port)[0]) ]
+  "Service urls": [ for port in sort(flatten(setunion(values(var.network_services["web_access"].targets)))): 
+                    format("https://${module.alb.this_lb_dns_name}:%s",split("/",port)[0]) 
+                  ]
   }
 }
