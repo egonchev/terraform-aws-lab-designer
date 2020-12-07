@@ -1,2 +1,2 @@
 # terraform-aws-lab-designer
-Modeling AWS EC2 multi-tiered web applications in Terraform via Map data collections
+Modeling AWS EC2 multi-tiered web applications via Map data collections in Terraform
