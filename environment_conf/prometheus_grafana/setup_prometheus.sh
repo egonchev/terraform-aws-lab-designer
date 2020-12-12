@@ -13,8 +13,6 @@ useradd --no-create-home --shell /bin/false alertmanager
 useradd --no-create-home --shell /bin/false node_exporter
 
 mkdir /etc/prometheus /var/lib/prometheus /etc/alertmanager
-#mkdir /var/lib/prometheus
-#mkdir /etc/alertmanager
 
 # Download prometheus binary files
 cd /tmp/
@@ -34,8 +32,6 @@ mv prometheus /usr/local/bin/
 mv promtool /usr/local/bin/
 
 chown -R prometheus:prometheus /usr/local/bin/prometheus /usr/local/bin/promtool /var/lib/prometheus /etc/prometheus
-#chown prometheus:prometheus /usr/local/bin/promtool
-#chown -R prometheus:prometheus /var/lib/prometheus /etc/prometheus
 
 # Install alertmanager
 cd /tmp/alertmanager-0.21.0.linux-amd64/
@@ -44,8 +40,6 @@ mv amtool /usr/local/bin/
 mv alertmanager.yml /etc/alertmanager/
 
 chown -R alertmanager:alertmanager /usr/local/bin/alertmanager /usr/local/bin/amtool /etc/alertmanager/
-#chown alertmanager:alertmanager /usr/local/bin/amtool
-#chown -R alertmanager:alertmanager /etc/alertmanager/
 
 mv /tmp/node_exporter-1.0.1.linux-amd64/node_exporter /usr/local/bin/
 chown node_exporter:node_exporter /usr/local/bin/node_exporter
