@@ -1,19 +1,15 @@
-output "ec2_instances" {
+output "EC2_instances" {
   value = {
-    for instance in aws_instance.ec2_instances :
+    for instance in module.environment.ec2_instances :
     instance.tags.Name => merge(
-      map("Instance ID", instance.id),
-      instance.public_ip == "" ? null : map("Public IP", instance.public_ip),
-      map("Private IP", instance.private_ip)
+      map("Private IP", instance.private_ip),
+      instance.public_ip=="" ? null : map("Public IP ", instance.public_ip),
+      instance.public_ip=="" ? null : map("Public DNS", instance.public_dns),      
     )
   }
 }
 
-output "load_balancer_url" {
-  value = {
-  "Load balancer DNS": module.alb.this_lb_dns_name,
-  "Service urls": [ for port in sort(flatten(setunion(values(var.network_services["web_access"].targets)))): 
-                    format("https://${module.alb.this_lb_dns_name}:%s",split("/",port)[0]) 
-                  ]
-  }
+output "Load_balancer_Urls" {
+  value =   sort(module.environment.alb_urls)
+  #"Load balancer DNS": module.environment.lb_dns_name,
 }
